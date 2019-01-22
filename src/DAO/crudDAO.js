@@ -3,15 +3,18 @@ class CrudDAO {
   constructor(model, key) {
     this.model = model;
     this.modelName = model.modelName.toLowerCase();
-    this.key = key;
+  }
+
+  all() {
+    return this.model.find();
   }
 
   get(item) {
-    return this.model.find(item).then();
+    return this.model.find(item);
   }
 
   post(item) {
-    return this.model.create(item).then();
+    return this.model.create(item);
   }
 
   list(query, pagination = { ignore: 0 , limit: 10}) {
@@ -19,11 +22,10 @@ class CrudDAO {
       .find(query)
       .skip(pagination.ignore)
       .limit(pagination.limit)
-      .then()
   }
 
   delete(criteria, item) {
-    return this.model.deleteOne(criteria, item).then();
+    return this.model.deleteOne(criteria, item);
   }
 
   push(id, item) {
@@ -35,7 +37,7 @@ class CrudDAO {
   }
 
   update(id, item) {
-    return this.model.updateOne({ _id: id }, { $set: item }).then();
+    return this.model.updateOne({ _id: id }, { $set: item });
   }
 }
 
