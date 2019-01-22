@@ -2,7 +2,7 @@ const Express = require('express');
 const ProductsDAO = require('../DAO/productsDAO');
 
 
-class ProductsRouter {
+class ProductsController {
 
   constructor() {
     this.router = new Express();
