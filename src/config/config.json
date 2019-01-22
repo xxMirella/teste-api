@@ -1,0 +1,7 @@
+{
+  "encrypt_config": {
+    "type" : "aes256",
+    "secret_key" : "secret_key_here",
+    "type_encrypt": "hex"
+  }
+}
