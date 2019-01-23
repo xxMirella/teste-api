@@ -1,22 +1,20 @@
-const Express = require('express');
-const BodyParser = require('body-parser');
+const Mongoose = require('mongoose');
+const Boom = require('boom');
 
+class Database {
 
-class ServerExpress {
-
-  constructor() {
-    this.server = new Express();
+  constructor(host) {
+    this.host = host;
   }
 
-  connect(port, routes) {
-    this.server.use(BodyParser.json());
-    this.server.use(BodyParser.urlencoded({ extended: true }));
-    this.server.use('/api', routes);
-
-    return this.server.listen(port, () => {
-      console.log(`server running at ${port}`)
-    });
+  connect() {
+    try {
+      Mongoose.connect(this.host, { useNewUrlParser: true });
+      return Mongoose.connection;
+    } catch (error) {
+      return Boom.internal('Erro na conexão com banco')
+    }
   }
 }
 
-module.exports = ServerExpress;
+module.exports = Database;

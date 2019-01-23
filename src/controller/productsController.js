@@ -1,12 +1,14 @@
 const Express = require('express');
+
 const ProductsDAO = require('../DAO/productsDAO');
+const Middleware = require('../services/middlewareService');
 
 
 class ProductsController {
 
   constructor() {
     this.router = new Express();
-    this.product = new ProductsDAO()
+    this.product = new ProductsDAO();
   }
 
   get() {
@@ -21,7 +23,7 @@ class ProductsController {
 
 
   getOne() {
-    return this.router.get('/products/:id', async (req, res) => {
+    return this.router.get('/products/:id', Middleware.requiresLogin, async (req, res) => {
       res.send(
         await this.product.get(req.params.id)
           .then(result => {res.status(200).send(result)})
@@ -60,3 +62,5 @@ class ProductsController {
     });
   }
 }
+
+module.exports = ProductsController;
