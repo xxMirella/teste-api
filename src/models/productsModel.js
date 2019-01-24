@@ -10,4 +10,4 @@ let ProductsModel = new Moongose.Schema({
   price:    { type: String, required: true }
 });
 
-module.exports = ProductsModel;
+module.exports = Moongose.model('Product', ProductsModel, 'products');

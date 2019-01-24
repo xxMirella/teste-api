@@ -9,7 +9,7 @@ class Database {
 
   connect() {
     try {
-      Mongoose.connect(this.host, { useNewUrlParser: true });
+      Mongoose.createConnection(this.host, { useNewUrlParser: true });
       return Mongoose.connection;
     } catch (error) {
       return Boom.internal('Erro na conexão com banco')

@@ -1,5 +1,5 @@
 const CrudDAO = require('./crudDAO');
-const ProductsModel = require('../models/products');
+const ProductsModel = require('../models/productsModel');
 
 
 class ProductsDAO extends CrudDAO {

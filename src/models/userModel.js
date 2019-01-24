@@ -1,6 +1,6 @@
 const Mongoose = require('mongoose');
 const ObjectId = Mongoose.Schema.ObjectId;
-const AddressSchema = require('./addressModel');
+const AddressSchema = require('./addressSchema');
 
 
 let UserModel = new Mongoose.Schema({
@@ -12,4 +12,4 @@ let UserModel = new Mongoose.Schema({
   password: { type: String, required: true }
 });
 
-module.exports = UserModel;
+module.exports = Mongoose.model('User', UserModel, 'users');

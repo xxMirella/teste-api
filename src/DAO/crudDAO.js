@@ -2,7 +2,6 @@ class CrudDAO {
 
   constructor(model, key) {
     this.model = model;
-    this.modelName = model.modelName.toLowerCase();
   }
 
   all() {
