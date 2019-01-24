@@ -27,26 +27,21 @@ class UserService {
     return bcrypt.hash(password, Config.bcryp_rounds);
   }
 
-  static mongoObjectId() {
-    let timestamp = (new Date().getTime() / 1000 | 0).toString(16);
-    return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () => {
-      return (Math.random() * 16 | 0).toString(16);
-    }).toLowerCase();
-  };
-
   static async createNewUserData(userData) {
     const { password } = userData;
-    userData.id = await UserService.mongoObjectId();
-    userData.address.id = await UserService.mongoObjectId();
     userData.password = await UserService.createHashPassword(password);
     return userData;
   }
 
   async register(data) {
+    console.log("DATA", data);
     const exists = await this.user.get({ email: data.email });
+    console.log(exists);
     if (!exists.length) {
+      const user = await UserService.createNewUserData(data);
+      console.log(user);
       return {
-        response: this.user.post(UserService.createNewUserData(data))
+        response: this.user.post(user)
           .then(value => {
             const response = JSON.parse(JSON.stringify(value));
             delete response.password;

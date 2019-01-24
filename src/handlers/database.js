@@ -8,12 +8,13 @@ class Database {
   }
 
   connect() {
-    try {
-      Mongoose.createConnection(this.host, { useNewUrlParser: true });
-      return Mongoose.connection;
-    } catch (error) {
-      return Boom.internal('Erro na conexão com banco')
-    }
+    Mongoose.Promise = global.Promise;
+    Mongoose.connect(this.host, {useMongoClient: true})
+      .then(() => {
+        console.log('Connected to MongoDB at ', this.host);
+        return Mongoose.connection;
+      })
+      .catch(err => Boom.internal('Erro na conexão com banco ' + err));
   }
 }
 

@@ -1,10 +1,8 @@
-const Moongose = require('mongoose');
-const ObjectId = Moongose.Schema.ObjectId;
+const Moongose = require('mongoose')
 const CategorySchema = require('./categorySchema');
 
 
 let ProductsModel = new Moongose.Schema({
-  id:       { type: ObjectId, required: true },
   name:     { type: String, required: true },
   category: CategorySchema,
   price:    { type: String, required: true }
