@@ -12,20 +12,25 @@ class UserController {
 
   register() {
     return this.router.post('/user', async (req, res) => {
-      res.send(
-        console.log("COMEÇO"),
-        await this.user.register(req.body)
-          .then(result => {res.status(200).send(result); session.userId = result.response.email})
-      );
+      await this.user.register(req.body)
+        .then(result => {
+          res.status(200).send(result)
+        })
+        .catch(error => {
+          res.status(400).send(error.message)
+        });
     });
   };
 
   login() {
     return this.router.post('/user/login', async (req, res) => {
-      res.send(
-        await this.user.login(req.body)
-          .then(result => {res.status(200).send(result); session.userId = result.response.email})
-      );
+      await this.user.login(req.body)
+        .then(result => {
+          res.status(200).send(result)
+        })
+        .catch(error => {
+          res.status(400).send(error.message)
+        });
     });
   };
 }
