@@ -1,4 +1,4 @@
-const Moongose = require('mongoose')
+const Moongose = require('mongoose');
 const CategorySchema = require('./categorySchema');
 
 

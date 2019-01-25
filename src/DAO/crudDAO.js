@@ -9,7 +9,7 @@ class CrudDAO {
   }
 
   get(item) {
-    return this.model.findOne(item).then();
+    return this.model.findOne(item);
   }
 
   post(item) {

@@ -28,6 +28,7 @@ class ProductsController {
 
   getOne() {
     return this.router.get('/products/:id', async (req, res) => {
+      console.log("PARAM REQ", req.params.id);
       await Middleware.validateToken(req, res)
         .then(res.send(await this.product.get({_id: req.params.id})))
         .catch(error => {
