@@ -6,26 +6,26 @@ const UserDAO = require('../DAO/userDAO');
 
 class MiddlewareService {
 
-  static validateToken(req, res) {
-    const token = req.headers['Authorization'];
+  static validateToken(req) {
+    const token = req.headers.authorization;
     if (!token) {
-      return Boom.unauthorized('Token inválido.')
+      throw Boom.unauthorized('Token inválido.')
     } else {
-      return JWT.verify(token, Config.TokenKey)
-        .then(decoded => {
+      return JWT.verify(token, Config.TokenKey, (error, token) => {
+        if (error) {
+          throw Boom.unauthorized('Não foi possível válidar token ' + error)
+        } else {
           const user = new UserDAO();
           const tokenActive = user.get({ token: req.headers.authorization });
           if (tokenActive.tokenIsActive) {
-            res.status(200).send(decoded)
+            return token
           } else {
-            Boom.unauthorized('Token inativo!')
+            throw Boom.unauthorized('Token inativo!')
           }
-        })
-        .catch(error => {
-          Boom.unauthorized('Não foi possível válidar token ' + error)
-        })
+        }
+      });
     }
-  }
+  };
 }
 
 module.exports = MiddlewareService;
