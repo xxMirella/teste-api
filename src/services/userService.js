@@ -34,7 +34,7 @@ class UserService {
   async updateToken(user) {
     const token = await UserService.createToken(user.email);
     await this.user.pull(user._id, token);
-    return await this.user.get({email: data.email});
+    return await this.user.get({email: user.email});
   }
 
   static serializeResponse(value) {
@@ -53,25 +53,25 @@ class UserService {
             return UserService.serializeResponse(value);
           })
           .catch(error => {
-            Boom.internal(error)
+            throw Boom.internal(error)
           })
       }
     } else {
-      return Boom.conflict('Email já cadastrado');
+      throw Boom.conflict('Email já cadastrado');
     }
   };
 
   async login(data) {
     const user = await this.user.get({email: data.email});
     if (!user) {
-      return Boom.unauthorized('Email não cadastrado');
+      throw Boom.unauthorized('Email não cadastrado');
     } else {
       return bcrypt.compare(data.password, user.password)
         .then(async samePassword => {
           if (!samePassword) {
-            return Boom.unauthorized('Senha incorreta');
+            throw Boom.unauthorized('Senha incorreta');
           } else {
-            const newUser = this.updateToken(user);
+            const newUser = await this.updateToken(user);
             return {
               newUser
             }
