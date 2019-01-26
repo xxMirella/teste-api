@@ -1,7 +1,7 @@
 const Express = require('express');
 
 const ProductsDAO = require('../DAO/productsDAO');
-const Middleware = require('../services/middlewareService');
+const ProductService = require('../services/productsService');
 
 
 class ProductsController {
@@ -9,6 +9,7 @@ class ProductsController {
   constructor() {
     this.router = new Express();
     this.product = new ProductsDAO();
+    this.service = new ProductService();
   }
 
   get() {
@@ -28,12 +29,9 @@ class ProductsController {
 
   getOne() {
     return this.router.get('/products/:id', async (req, res) => {
-      console.log("PARAM REQ", req.params.id);
-      await Middleware.validateToken(req, res)
-        .then(res.send(await this.product.get({_id: req.params.id})))
-        .catch(error => {
-          res.status(400).send(error.message)
-        })
+      await this.service.getProducts(req)
+        .then(result => { res.status(200).send(result) })
+        .catch(error => { res.status(400).send(error) })
     });
   };
 
