@@ -1,6 +1,3 @@
-/*jslint node: true */
-"use strict";
-
 const JWT = require('jsonwebtoken');
 const Boom = require('boom');
 const Config = require('../config/config');
@@ -16,11 +13,10 @@ class UserService {
   }
 
   static createToken(userEmail) {
-    const token = JWT.sign(
+    return JWT.sign(
       userEmail,
       Config.TokenKey
     );
-    return {token};
   }
 
   static createHashPassword(password) {
@@ -31,22 +27,30 @@ class UserService {
     const { password } = userData;
     userData.password = await UserService.createHashPassword(password);
     userData.token = await UserService.createToken(userData.email);
+    userData.tokenIsActive = true;
     return userData;
+  }
+
+  async updateToken(user) {
+    const token = await UserService.createToken(user.email);
+    await this.user.pull(user._id, token);
+    return await this.user.get({email: data.email});
+  }
+
+  static serializeResponse(value) {
+    const response = JSON.parse(JSON.stringify(value));
+    delete response.password;
+    return response;
   }
 
   async register(data) {
     const exists = await this.user.get({email: data.email});
-    console.log("EXISTE", !exists, exists);
     if (!exists) {
       const user = await UserService.createNewUserData(data);
       return {
         response: await this.user.post(user)
           .then(value => {
-            console.log("DENTO DO THEN", value);
-            const response = JSON.parse(JSON.stringify(value));
-            delete response.password;
-            console.log("RESPOSTA", response);
-            return response;
+            return UserService.serializeResponse(value);
           })
           .catch(error => {
             Boom.internal(error)
@@ -67,8 +71,7 @@ class UserService {
           if (!samePassword) {
             return Boom.unauthorized('Senha incorreta');
           } else {
-            const token = await UserService.createToken(user.email);
-            const newUser = await this.user.pull(user._id, { token: token});
+            const newUser = this.updateToken(user);
             return {
               newUser
             }
