@@ -32,7 +32,7 @@ class CrudDAO {
   }
 
   pull(id, item) {
-    return this.model.updateOne(id, { $pull: item});
+    return this.model.updateOne({ _id: id }, { $pull: { item }});
   }
 
   update(id, item) {
