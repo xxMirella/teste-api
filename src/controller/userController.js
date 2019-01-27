@@ -6,13 +6,13 @@ const Express = require('express');
 class UserController {
 
   constructor() {
-    this.user = new UserService();
+    this.service = new UserService();
     this.router = new Express();
   }
 
   register() {
     return this.router.post('/user', async (req, res) => {
-      await this.user.register(req.body)
+      await this.service.register(req.body)
         .then(result => {
           res.status(200).send(result)
         })
@@ -24,7 +24,7 @@ class UserController {
 
   login() {
     return this.router.post('/user/login', async (req, res) => {
-      await this.user.login(req.body)
+      await this.service.login(req.body)
         .then(result => {
           res.status(200).send(result)
         })
