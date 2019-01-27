@@ -9,16 +9,16 @@ class MiddlewareService {
   static validateToken(req) {
     const token = req.headers.authorization;
     if (!token) {
-      throw Boom.unauthorized('Token inválido.')
+      throw Boom.notFound('Token não encontrado.')
     } else {
-      return JWT.verify(token, Config.TokenKey, (error, token) => {
+      return JWT.verify(token, Config.TokenKey, async (error, email) => {
         if (error) {
-          throw Boom.unauthorized('Não foi possível válidar token ' + error)
+          throw Boom.internal('Não foi possível válidar token ' + error)
         } else {
-          const user = new UserDAO();
-          const tokenActive = user.get({ token: req.headers.authorization });
+          const userDAO = new UserDAO();
+          const tokenActive = await userDAO.get({ email: email });
           if (tokenActive.tokenIsActive) {
-            return token
+            return tokenActive
           } else {
             throw Boom.unauthorized('Token inativo!')
           }
