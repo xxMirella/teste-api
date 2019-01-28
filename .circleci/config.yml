@@ -33,4 +33,4 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: grunt jshint
+      - run: ./node_modules/grunt/bin/grunt jshint
