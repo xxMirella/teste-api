@@ -1,0 +1,12 @@
+{
+  "encrypt_config": {
+    "type" : "aes256",
+    "secret_key" : "secret_key_here",
+    "type_encrypt": "hex"
+  },
+  "database": {
+    "host": "mongodb://localhost:27017/products"
+  },
+  "TokenKey": "Super_secret_token_here",
+  "bcryp_rounds" : 12
+}
