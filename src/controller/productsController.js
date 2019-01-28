@@ -1,6 +1,8 @@
 const Express = require('express');
+const ExpressJoiValidator = require('express-joi-validator');
 
 const ProductService = require('../services/productsService');
+const ProductsValidator = require('../services/validators/productsValidators');
 
 
 class ProductsController {
@@ -15,15 +17,14 @@ class ProductsController {
       res.send(
         await this.service.getAll(req)
           .then(result => {
-            res.status(200).send(result)
+            res.status(200).send(result);
           })
           .catch(error => {
-            res.status(400).send(error.message)
+            res.status(error.output.statusCode).send(error.message);
           })
       );
     });
   };
-
 
   getOne() {
     return this.router.get('/products/:id', async (req, res) => {
@@ -32,21 +33,22 @@ class ProductsController {
           res.status(200).send(result)
         })
         .catch(error => {
-          res.status(400).send(error)
+          res.status(error.output.statusCode).send(error.message);
         })
     });
   };
 
   post() {
-    return this.router.post('/products', async (req, res) => {
-      await this.service.postProducts(req)
-        .then(result => {
-          res.status(200).send(result)
-        })
-        .catch(error => {
-          res.status(400).send(error)
-        })
-    });
+    return this.router.post('/products',
+      ExpressJoiValidator(ProductsValidator.validatePost()), async (req, res) => {
+        await this.service.postProducts(req)
+          .then(result => {
+            res.status(200).send(result)
+          })
+          .catch(error => {
+            res.status(error.output.statusCode).send(error.message);
+          })
+      });
   };
 
   put() {
@@ -56,19 +58,19 @@ class ProductsController {
           res.status(200).send(result)
         })
         .catch(error => {
-          res.status(400).send(error)
+          res.status(error.output.statusCode).send(error.message);
         })
     });
   }
 
   delete() {
-    return this.router.post('/products/:id', async (req, res) => {
+    return this.router.delete('/products/:id', async (req, res) => {
       await this.service.deleteProducts(req)
         .then(result => {
           res.status(200).send(result)
         })
         .catch(error => {
-          res.status(400).send(error)
+          res.status(error.output.statusCode).send(error.message);
         })
     });
   }

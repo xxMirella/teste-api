@@ -1,6 +1,8 @@
-const UserService = require('../services/userService');
-
 const Express = require('express');
+const ExpressJoiValidator = require('express-joi-validator');
+
+const UserService = require('../services/userService');
+const UserValidators = require('../services/validators/userValidators');
 
 
 class UserController {
@@ -11,25 +13,25 @@ class UserController {
   }
 
   register() {
-    return this.router.post('/user', async (req, res) => {
+    return this.router.post('/user/register', ExpressJoiValidator(UserValidators.validateRegister()), async (req, res) => {
       await this.service.register(req.body)
         .then(result => {
           res.status(200).send(result)
         })
         .catch(error => {
-          res.status(400).send(error.message)
+          res.status(error.output.statusCode).send(error.message);
         });
     });
   };
 
   login() {
-    return this.router.post('/user/login', async (req, res) => {
+    return this.router.post('/user/login', ExpressJoiValidator(UserValidators.validateLogin()), async (req, res) => {
       await this.service.login(req.body)
         .then(result => {
           res.status(200).send(result)
         })
         .catch(error => {
-          res.status(400).send(error.message)
+          res.status(error.output.statusCode).send(error.message);
         });
     });
   };
