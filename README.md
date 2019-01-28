@@ -6,12 +6,20 @@ Api REST feita utilizando Node.js, para cadastrar productos.
 
 > `npm install`
 
-> npm run start
+A biblioteca do `bcrypt` pode apresentar alguns erros ao ser instalada no Windows, para ajuda em como proceder quanto a instalação dessa biblioteca, utilize a [Documentação Bcrypt](https://github.com/kelektiv/node.bcrypt.js/wiki/Installation-Instructions#microsoft-windows).
 
+### Execução da aplicação
 
-## Rotas de usuário
+> `npm run start`
 
-Parametro para registro de usuário `/api/user/register`:
+#Endpoints
+
+### Cadastro de usuário `/api/user/register`:
+POST /api/user/register HTTP/1.1
+
+Host: localhost:3000
+
+Content-Type: application/json
 ```
 {
     "name": Joi.string().required(),
@@ -30,7 +38,12 @@ Parametro para registro de usuário `/api/user/register`:
 ```
 A resposta do endpoint, é o usuário cadastrado e um token válido.
 
-Parametro para login de usuário `/api/user/login`:
+### Login de usuário `/api/user/login`:
+POST /api/user/login HTTP/1.1
+
+Host: localhost:3000
+
+Content-Type: application/json
 ```
 {
     "email": Joi.string().email().required(),
@@ -40,10 +53,14 @@ Parametro para login de usuário `/api/user/login`:
 A resposta do endpoint, é o usuário cadastrado e um token válido.
 
 
-## Rotas para producto
+### Cadastro de produtos `/api/products`:
+POST /api/products HTTP/1.1
 
+Host: localhost:3000
 
-Parametro para cadastro de produto `/api/products`:
+Content-Type: application/json
+
+Authorization: `TOKEN-AQUI`
 ```
 {
     "name": Joi.string().required(),
