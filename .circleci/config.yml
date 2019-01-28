@@ -5,6 +5,13 @@
 version: 2
 jobs:
   build:
+
+    filters:
+      branches:
+        only:
+          - develop
+
+
     docker:
       # specify the version you desire here
       - image: circleci/node:10.15.0
@@ -34,3 +41,11 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: ./node_modules/grunt/bin/grunt jshint
+
+  deploy:
+    requires:
+      - build
+
+    - run: git checkout master
+    - run: git merge develop --no-ff
+    - run: git push origin
